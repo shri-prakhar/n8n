@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js" 
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model Users {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  email String  @unique
+  name String 
+  password String
+  workflows Workflows[]
+  credentials  Credentials[]
+}
+
+model Credentials {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String 
+  platform String 
+  data Json 
+  userId String @db.ObjectId
+  user Users @relation(fields: [userId], references: [id])
+  
+}
+
+model Workflows {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String 
+  enabled Boolean
+  nodes Json
+  connections Json 
+  userId String @db.ObjectId
+  user Users @relation(fields: [userId], references: [id])
+
+}
+
+model Webhook {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String 
+  method String
+  path String 
+  header String
+  secret String 
+}

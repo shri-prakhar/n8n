@@ -1,0 +1,13 @@
+{
+  "extends": "../../packages/typescript-config/base.json",
+  "compilerOptions": {
+    "rootDir":"src",
+    "outDir": "dist",
+    "incremental": true,
+    "composite": true,
+    "declaration": true,      // generates .d.ts files
+    "declarationMap": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
