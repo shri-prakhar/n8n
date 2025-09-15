@@ -21,6 +21,9 @@ model Users {
   password String
   workflows Workflows[]
   credentials  Credentials[]
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt    
+
 }
 
 model Credentials {
@@ -30,7 +33,9 @@ model Credentials {
   data Json 
   userId String @db.ObjectId
   user Users @relation(fields: [userId], references: [id])
-  
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt    
+
 }
 
 model Workflows {
@@ -39,9 +44,12 @@ model Workflows {
   enabled Boolean
   nodes Json
   connections Json 
+  viewport Json?
+  uiState Json?
   userId String @db.ObjectId
   user Users @relation(fields: [userId], references: [id])
-
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt    
 }
 
 model Webhook {
@@ -51,4 +59,7 @@ model Webhook {
   path String 
   header String
   secret String 
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt    
+
 }

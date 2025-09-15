@@ -1,4 +1,4 @@
-// apps/web/lib/api.ts
+
 import axios from "axios"
 export type SignInForm = { email: string; password: string };
 export type SignUpForm = { name: string; email: string; password: string };
@@ -35,4 +35,5 @@ export async function signInApi(payload: SignInForm) {
     throw new Error("invalid")
   }
 }
+
 export default api

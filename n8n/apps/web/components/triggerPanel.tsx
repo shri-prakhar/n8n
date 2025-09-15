@@ -1,6 +1,6 @@
 // components/triggerPanel.tsx
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, MousePointerClick, Globe, Plus } from "lucide-react";
+import { Mail, MousePointerClick, Globe, Plus, Bot } from "lucide-react";
 import { FaTelegram } from "react-icons/fa";
 import { nodeTypes } from "./canvasWorkspace";
 
@@ -100,6 +100,13 @@ export default function RightPanel({
                         <FaTelegram className="w-5 h-5 text-gray-400" />
                         <span>Telegram</span>
                       </div>
+                      <div
+                className="flex items-center gap-3 p-2 hover:bg-[#2a2a2a] rounded-md cursor-pointer"
+                onClick={() => onAddNode("AIAgentnode")}
+              >
+                <Bot className="w-5 h-5 text-gray-400" />
+                <span>AI Agent</span>
+              </div>
                     </div>
                   </div>
                 )}

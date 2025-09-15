@@ -5,6 +5,7 @@ import { prisma } from "@repo/db";
 export const verify = async (req:Request , res:Response , next: NextFunction )=> {
     try{
         const token =  req.cookies.token
+        console.log(token)
 
     if (!token) {
       return res.status(401).json({ message: 'Authentication token missing' });
@@ -19,16 +20,18 @@ export const verify = async (req:Request , res:Response , next: NextFunction )=>
             id: decoded
         }
     })
+    console.log(user)
 
     if (!user) {
+        console.log("Authentication failed")
         throw new Error("Authentication failed")
     }
 
-    req.body.user = {id : user.id}
+    req.user = {id : user.id}
     next();
 }catch(err:unknown){
     if (err instanceof Error){
-        res.status(401).json({message: err.message})
+        res.status(402).json({message: err.message})
     }else{
         console.log("unknoen error")
     }

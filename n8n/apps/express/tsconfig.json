@@ -6,7 +6,8 @@
     "incremental": true,
     "composite": true,
     "declaration": true,      // generates .d.ts files
-    "declarationMap": true
+    "declarationMap": true,
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

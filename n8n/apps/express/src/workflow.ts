@@ -4,8 +4,8 @@ import { prisma } from "@repo/db";
 
 export const createWorkflow = async (req: Request, res: Response) => {
   try {
-    const { title, enabled, nodes, connections } = req.body;
-    const { id: userId } = req.body.user
+    const { title, enabled, nodes, connections, viewport ,uiState } = req.body;
+    const userId = req.user?.id;
 
     const workflow = await prisma.workflows.create({
       data: {
@@ -13,7 +13,9 @@ export const createWorkflow = async (req: Request, res: Response) => {
         enabled,
         nodes,
         connections,
-        user: { connect: { id: userId } }
+        viewport,
+        uiState,
+        user: { connect: { id: userId } },
       },
     });
 
@@ -26,7 +28,7 @@ export const createWorkflow = async (req: Request, res: Response) => {
 
 export const getWorkflows = async (req: Request, res: Response) => {
   try {
-    const { id : userId } = req.body.user
+    const userId = req.user?.id;
     const workflows = await prisma.workflows.findMany({
       where:{
         userId:userId
@@ -61,11 +63,11 @@ export const getWorkflowById = async (req: Request, res: Response) => {
 export const updateWorkflow = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { title, enabled, nodes, connections } = req.body;
+    const {  nodes, connections,viewport,uiState } = req.body;
 
     const workflow = await prisma.workflows.update({
       where: { id },
-      data: { title, enabled, nodes, connections },
+      data: { nodes, connections, viewport , uiState },
     });
 
     res.json(workflow);

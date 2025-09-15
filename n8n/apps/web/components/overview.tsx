@@ -3,6 +3,7 @@
 import {  useRouter } from "next/navigation";
 import TitleButton from "./titleButton"
 import api from "../lib/api";
+import Workflows from "./workflows";
 
 interface OverViewtypes {
     clicked: string | null;
@@ -16,17 +17,28 @@ interface OverViewtypes {
 export default function Overview({clicked , setClicked }: OverViewtypes) {
 
   const router = useRouter();
-  let x=0
+  
   async function HandelClick(){
-    try{
-    
-      x++;
-
-    const res = await api.post("/workflow" , {
-      title:`New Workflow ${x}`,
+    try{  
+    const workflows = await api.get("/workflows"); 
+     
+const res = await api.post("/workflow" , {
+      title:`New Workflow ${workflows.data.length + 1}`,
       enabled:true,
-      nodes:[],
+      nodes:[    {
+      id: "Add-trigger",
+      position: { x: 100, y: 200 },
+      data: { label: "Add trigger"},
+      type: "AddTriggernode",
+    }],
       connections:[],
+      viewport:{ },
+      uiState:{
+              activeParentId:"Add-trigger",
+              firstNodeAdded:false,
+              rightPanelOpen:false,
+              saveButtonEnable:false,
+            }
     });
 
     const workflow = res.data
@@ -39,7 +51,7 @@ export default function Overview({clicked , setClicked }: OverViewtypes) {
 
   }
   return (
-    <>
+    <div>
     <div className="flex items-center justify-between mx-10 ">
       <div>
         <div className="text-white text-2xl font-medium mt-4">Overview</div>
@@ -53,12 +65,25 @@ export default function Overview({clicked , setClicked }: OverViewtypes) {
         </button>
       </div>
     </div>
-        <div className="flex justify-normal gap-4 m-4 mx-10 mt-10 ">
-            <TitleButton title="Workflows" clicked={clicked} setClicked={setClicked} />
-            <TitleButton title="Credentials" clicked={clicked} setClicked={setClicked} />
-            <TitleButton title="Execution" clicked={clicked} setClicked={setClicked} />
+              <div className="flex justify-normal gap-4 m-4 mx-10 mt-10 ">
+                
+                {["Workflows", "Credentials", "Execution"].map((title) => (
+                  <TitleButton
+                    key={title}
+                    title={title}
+                    clicked={clicked}
+                    setClicked={setClicked}
+                  />
+                ))}
+              </div>
+        
+              <div className="mx-10">
+                {clicked === "Workflows" && <Workflows />}
+                {clicked === "Credentials" }
+                {clicked === "Execution" }
+              </div>
+            
         </div>
-        </>
 
   );
 }

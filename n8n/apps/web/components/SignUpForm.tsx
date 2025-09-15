@@ -9,16 +9,54 @@ export default function SignUpForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    await signUpApi({ name, email, password }); // -
-    window.location.href = "/signin"; // redirect after success
+    await signUpApi({ name, email, password });
+    window.location.href = "/signin";
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input className="w-full border rounded px-3 py-2 mb-3" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} />
-      <input className="w-full border rounded px-3 py-2 mb-3" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input className="w-full border rounded px-3 py-2 mb-3" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button className="px-4 py-2 bg-indigo-600 text-white rounded w-full cursor-pointer">Sign up</button>
-    </form>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50 px-4">
+      <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-gray-900">Create your account</h2>
+          <p className="mt-2 text-gray-500">Join and start building workflows</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+          <input
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+            placeholder="Full name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <button
+            className="w-full bg-indigo-600 text-white rounded-lg py-3 font-medium shadow hover:bg-indigo-700 transition"
+          >
+            Sign up
+          </button>
+        </form>
+
+        <p className="mt-6 text-center text-sm text-gray-600">
+          Already have an account?{" "}
+          <a href="/signin" className="text-indigo-600 font-medium hover:underline">
+            Sign in
+          </a>
+        </p>
+      </div>
+    </div>
   );
 }

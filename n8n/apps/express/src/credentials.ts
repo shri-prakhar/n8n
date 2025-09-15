@@ -4,7 +4,7 @@ import { Request , Response } from "express"
 export const Credentials = async (req:Request , res:Response) => {
     try{
     const { title ,  platform , data } = req.body;
-    const { id: userId } = req.body.user
+    const userId = req.user?.id;
 
     const creds = await prisma.credentials.create({
         data:{
