@@ -46,7 +46,7 @@ export default function Personal({ clicked, setClicked }: Personaltypes) {
 
   }
   return (
-    <div>
+    <div className="w-full">
       <div className="flex items-center justify-between mx-10 ">
         <div>
           <div className="text-white text-2xl font-medium mt-4">Personal</div>

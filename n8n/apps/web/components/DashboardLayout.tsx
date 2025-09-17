@@ -14,17 +14,18 @@ export default function DashboardLayout() {
 
      console.log(active)
   return (
-    <div className="h-screen bg-[#2d2e2e] ">
-      <div>
+    <div className="h-screen w-screen bg-[#2d2e2e] flex">
+      <div id="leftBar" className="h-screen w-[15%]">
         <SideBar active={active} setActive={setActive} />
       </div>
-      <div>
-        <NavBar />
-    </div>
-    <div className="ml-72 mt-12">
-      {active === "Personal" ? <Personal clicked={clicked} setClicked={setClicked} />: <Overview clicked={clicked} setClicked={setClicked} setActive={setActive} /> }
-    </div>
-    
+      <div id="rightBar" className="h-screen w-[85%] flex flex-col">
+        <div className="h-[10%]">
+          <NavBar />
+        </div>
+        <div className="">
+          {active === "Personal" ? <Personal clicked={clicked} setClicked={setClicked} />: <Overview clicked={clicked} setClicked={setClicked} setActive={setActive} /> }
+        </div>
+      </div>    
     </div>
     
 

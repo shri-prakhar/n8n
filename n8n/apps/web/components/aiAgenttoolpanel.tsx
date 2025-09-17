@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Hammer } from "lucide-react";
+import { Code, Hammer } from "lucide-react";
 import { nodeTypes } from "./canvasWorkspace";
 
 interface ToolPanelProps {
@@ -38,7 +38,7 @@ export default function ToolPanel({ open, onClose, onAddTool }: ToolPanelProps) 
                 className="flex items-center gap-3 p-2 hover:bg-[#2a2a2a] rounded-md cursor-pointer"
                 onClick={() => onAddTool("Toolnode")}
               >
-                <Hammer className="w-5 h-5 text-purple-400" />
+                <Code className="w-5 h-5 text-purple-400" />
                 <span>Tool</span>
               </div>
             </div>

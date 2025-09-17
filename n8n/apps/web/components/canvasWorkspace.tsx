@@ -13,6 +13,7 @@
     Node,
     Edge,
     ReactFlowInstance,
+    MarkerType,
   } from "@xyflow/react";
   import "@xyflow/react/dist/style.css";
   import AddTrigger from "./nodes/addTrigger";
@@ -25,10 +26,30 @@
     ToolNode,
   } from "./nodes/customnodes";
   import RightPanel from "./triggerPanel";
-  import { useSaveButtonStore, usetoolpanelStore } from "./globalstateVaribles/Reactflow.ts/ReactflowVariables";
+  import { useNodeformStore, useSaveButtonStore, usetoolpanelStore } from "./globalstateVaribles/Reactflow.ts/ReactflowVariables";
   import api from "../lib/api";
   import { useParams } from "next/navigation";
   import ToolPanel from "./aiAgenttoolpanel";
+import { MoveLeft, PanelBottom } from "lucide-react";
+import ExecuteWorkflowButton from "./nodes/executeButton";
+import NodeConfigForm from "./nodes/nodeformconfig";
+import { nodeSchemas } from "./globalstateVaribles/nodeformschemas";
+  <svg width="0" height="0">
+  <defs>
+    <marker
+      id="rectArrow"
+      markerWidth="10"
+      markerHeight="6"
+      refX="10"  
+      refY="3"
+      orient="auto"
+      markerUnits="strokeWidth"
+    >
+      <rect x="0" y="0" width="6" height="6" fill="#00bcd4" />
+    </marker>
+  </defs>
+</svg>
+
 
   export const nodeTypes = {
     AddTriggernode: AddTrigger,
@@ -37,7 +58,7 @@
     Telegramnode: TelegramNode,
     AIAgentnode: AIAgentNode,
     ManualTriggernode: ManualTriggerNode,
-    Toolnode: ToolNode,
+    Toolnode: ToolNode, 
   };
 
   export default function Workflow() {
@@ -56,7 +77,6 @@
     const params = useParams<{ id: string }>();
     const id = params?.id;
 
-    // initial node data: no callbacks here (we will rehydrate)
     const initialPlain: Node[] = [
       {
         id: "Add-trigger",
@@ -78,6 +98,7 @@
     const [reactFlowInstance, setReactFlowInstance] =
       useState<ReactFlowInstance | null>(null);
     const [pendingViewport, setPendingViewport] = useState<any>(null);
+    const { setformopen, setformSchema, setactiveNodeId, setformdata } = useNodeformStore();
 
     let timeout: NodeJS.Timeout | undefined;
 
@@ -201,7 +222,7 @@
       }
     }, [reactFlowInstance, pendingViewport]);
 
-    // minimap auto-show
+    
     useEffect(() => {
       function handleEvent() {
         showminimap(true);
@@ -306,6 +327,8 @@
             onAdd: handleOpenPanel,
             onDelete: handleDeleteNode,
             ...(isAIAgent ? { onToolAdd: handleOpenToolPanel } : {}),
+            label: type, 
+            customData: {}
           },
         };
 
@@ -317,14 +340,22 @@
             source: activeParentId as string,
             sourceHandle: `${activeParentId}-out`,
             target: newId,
-          },
+    },
         ]);
+          const schema = nodeSchemas[type] || [
+          { name: "title", label: "Title", type: "text" },
+        { name: "description", label: "Description", type: "textarea" },
+         ];
 
-        setActiveParentId(newId);
 
-        
+        setActiveParentId(newId); 
         setRightPanelOpen(false);
         setSaveButtonEnable(true);
+        
+        setactiveNodeId(newId);
+        setformSchema(schema);
+        setformdata({});
+        setformopen(true);
 
       },
 
@@ -381,6 +412,7 @@
       sourceHandle: `${activeToolParentId}-tools`,
       target: newId,
       targetHandle: "tool-target",
+      style: { strokeDasharray: "5,4" },
     };
 
     console.log(nodes)
@@ -458,9 +490,19 @@
       },
     }));
 
+    const defaultEdgeOptions = {
+      markerEnd: {
+        type: MarkerType.ArrowClosed,
+        color: "white",
+        width: 15,
+        height: 15,
+      },
+      style: { strokeWidth: 2, stroke: "white" }, 
+    };
+
     return (
-      <div className="ml-64 mt-12">
-        <div className="w-full h-screen mr-72">
+      <div className="h-full w-full">
+        <div className="h-full w-full">
           <ReactFlow
             nodes={enhancedNodes}
             edges={edges}
@@ -472,8 +514,9 @@
             selectionOnDrag
             nodeTypes={nodeTypes}
             fitView
+            defaultEdgeOptions={defaultEdgeOptions}
           >
-            <Background variant={BackgroundVariant.Dots} color="gray" bgColor="#2d2e2e" />
+            <Background variant={BackgroundVariant.Dots} color="white " bgColor="#2d2e2e" />
             <Controls
               showFitView={true}
               showZoom={true}
@@ -483,9 +526,14 @@
                 background: "#2a2a2a",
                 borderRadius: "0.5rem",
                 padding: "6px",
-                display: "flex",
-                gap: "8px",
-                width: "12px",
+                display: "flex",        
+                flexDirection: "row",    
+                gap: "25px",
+                width: "auto", 
+                position: "fixed",        
+                bottom: 20,               
+                left: 250,                 
+                zIndex: 5,                
               }}
             />
             
@@ -507,9 +555,18 @@
                 background: gray !important;
               }
 
-              .react-flow__controls button svg {
-                stroke: white !important;
-              }
+            .react-flow__controls button svg {
+              stroke: white !important;
+              fill: white !important;   /* some icons use fill */
+              width: 22px !important;   /* increase icon size */
+              height: 22px !important;
+            }
+
+            .react-flow__controls button {
+              background: #2b2f33 !important;
+              border-radius: 6px;
+            }
+              
             `}</style>
 
             {minimap && (
@@ -528,10 +585,25 @@
                   height: 120,
                   background: "#1e1e1e",
                   borderRadius: "0.5rem",
+                  bottom: 80,   
+                  left: 30,
+                  zIndex: 10,   
                 }}
               />
             )}
           </ReactFlow>
+          <NodeConfigForm 
+              onSubmit={(data) => {
+                setNodes((nds) =>
+                  nds.map((node) =>
+                    node.id === useNodeformStore.getState().activeNodeId
+                      ? { ...node, data: { ...node.data, customData: data } }
+                      : node
+                  )
+                );
+              }}
+          />
+          <ExecuteWorkflowButton workflowId={id}/>
 
           <RightPanel
             open={rightPanelOpen}
@@ -541,6 +613,7 @@
             firstNodeAdded={firstNodeAdded}
           />
           <ToolPanel open={toolPanelOpen} onClose={() => setToolPanelOpen(false)} onAddTool={handleAddTool} />
+          
         </div>
       </div>
     );

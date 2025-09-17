@@ -9,24 +9,19 @@ import SideBar from "../../../components/sidebar";
 export default function DashboardLayout() {
 
   return (
-    <div className="h-screen bg-[#2d2e2e] ">
-      <div>
-        <SideBar />
+    <div className="h-screen w-screen flex flex-row">
+      <div id="left" className="w-[15%] h-full">
+        <div className="h-full w-full">
+          <SideBar />
+        </div>
       </div>
-      <div >
-        <NavBar />
-        
+      <div id="right" className="flex flex-col h-screen w-[85%]">
+        <div className="h-[10%] w-full">
+          <NavBar />
+        </div>
+        <div className="bg-white h-[90%]">
+          <Workflow /> 
+        </div>
+      </div>
     </div>
-    
-        
-    <div className="ml-72 mt-12">
-          </div>
-            <Workflow />
-            
-            
-    </div>
-    
-    
-
-  );
-}
+)}

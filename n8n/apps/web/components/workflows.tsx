@@ -11,7 +11,18 @@ interface Workflow {
   nodes: [];
   connections: [];
   userId: string;
+  createdAt: string;
+  updatedAt: string;
 }
+
+const formatDate = (dateStr: string) =>
+  new Date(dateStr).toLocaleString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
 export default function Workflows() {
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
@@ -46,11 +57,23 @@ export default function Workflows() {
         <p className="text-gray-400">No workflows found.</p>
       ) : (
         workflows.map((workflow) => (
-          <div key={workflow.id} onClick={() => handleClick(workflow.id)} className="cursor-pointer mt-6 space-y-4 w-full border border-gray-600 rounded-md p-4 bg-[#2d2e2e] hover:bg-gray-500 transition duration-200">
-            <h3 className="text-lg font-semibold text-white">
-              {workflow.title}
-            </h3>
-          </div>
+        <div
+          key={workflow.id}
+          onClick={() => handleClick(workflow.id)}
+          className="
+            cursor-pointer mt-6 w-full rounded-md border border-gray-600
+            bg-[#414244] p-3 
+            hover:bg-gray-500 hover:shadow-lg hover:scale-[1.02]
+            transition-all duration-300 ease-in-out
+          "
+        >
+          <h3 className="text-base font-medium text-white">
+            {workflow.title}
+          </h3>
+          <p className="text-xs text-gray-300 mt-1">
+            Created: {formatDate(workflow.createdAt)} | Last updated: {formatDate(workflow.updatedAt)}
+          </p>
+        </div>
         ))
       )}
     </div>

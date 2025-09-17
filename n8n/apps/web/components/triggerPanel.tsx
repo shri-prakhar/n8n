@@ -22,7 +22,7 @@ export default function RightPanel({
     <div>
       <button
         onClick={() => setOpen(true)}
-        className="fixed top-15 right-6 z-50 w-10 h-10 rounded-lg bg-gray-600 text-white flex items-center justify-center shadow-lg hover:bg-gray-400 transition cursor-pointer"
+        className="fixed top-20 right-6 w-10 h-10 rounded-lg bg-gray-600 text-white flex items-center justify-center shadow-lg hover:bg-gray-400 transition cursor-pointer"
       >
         <Plus className="w-5 h-5" />
       </button>
@@ -57,7 +57,7 @@ export default function RightPanel({
                 </button>
               </div>
 
-              <div className="p-4 flex flex-col gap-6 text-gray-300 text-sm">
+              <div className="p-4 flex flex-col gap-6 text-gray-300 text-lg">
                 {!firstNodeAdded ? (
                   <div>
                     <h3 className="text-xs uppercase text-gray-400 mb-2">

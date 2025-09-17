@@ -32,15 +32,24 @@ export default function NavBar() {
   }, [id]);
 
   return (
-    <div className="w-full bg-[#525456] fixed top-0 h-12 border-b border-gray-500 flex items-center pl-72 text-lg text-gray-400 gap-2">
-      <UserCircle />
-      {id && workflowTitle ? ( <div className="flex items-center ">
-        
-        Personal / {workflowTitle} 
-        <div className="positon fixed right-20">
-        <SaveButton />
+    <div className=" h-full w-full bg-[#414244] border-b border-gray-500 flex items-center text-lg text-gray-400 gap-2 p-2">
+      <div className="w-full flex flex-row justify-between px-4">
+        <div className="flex flex-row gap-2 ">
+          <div className="pt-1">
+            <UserCircle />
+          </div>
+          <div>
+            {id && workflowTitle ? ( <div className="flex items-center ">
+              Personal / {workflowTitle} 
+              <div className="positon fixed">
+              </div>
+              </div>): "Personal"}
+          </div>
         </div>
-        </div>): "Personal"}
+        <div>
+          <SaveButton />
+        </div>
+      </div>
     </div>
   );
 }

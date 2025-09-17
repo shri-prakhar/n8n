@@ -16,12 +16,16 @@ export default function SideBar({active , setActive }: Sidebartypes) {
  
 
     return (
-        <div className="fixed top-0 left-0 w-64 bg-[#525456] h-screen">
-            <div className="mt-12 mx-4 flex items-center gap-1 text-white text-sm font-bold">
-                <N8N />
-                n8n
+        <div className="w-full bg-[#414244] h-full flex flex-col gap-2">
+            <div className=" flex flex-row items-center gap-1 text-white text-sm font-bold h-[10%] p-4 pt-8">
+                <div>
+                    <N8N />
+                </div>
+                <div>
+                    n8n
+                </div>
             </div>
-            <div>
+            <div className="h-[90%]">
                 <SideBarComp title="Overview" icon={<Home />} active={active} setActive={setActive} />
                 <SideBarComp title="Personal" icon={<Personal />} active={active} setActive={setActive} />
             </div>

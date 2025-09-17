@@ -39,3 +39,34 @@ export const usetoolpanelStore = create<toolpanelStore>((set) => ({
   activeToolParentId: null,
   setActiveToolParentId: (id: string | null) => set({ activeToolParentId: id }),
 }));
+
+interface FeildConfig{
+  name : string;
+  label : string ;
+  type  : "text" | "number" | "select" |  "email" | "textarea";
+  placeholder:string;
+  options? : string[]
+}
+
+interface NodeformSchema {
+  formOpen : boolean;
+  formSchema : FeildConfig[];
+  activeNodeId : string |null ;
+  formdata:Record<string , any>;
+  setformopen:(open: boolean ) => void;
+  setformSchema:(schema : FeildConfig[] ) => void ;
+  setactiveNodeId : (id : string | null) => void ;
+  setformdata: (data : Record<string,any>) => void;
+}
+
+export const useNodeformStore = create<NodeformSchema>((set) => ({
+  formOpen: false,
+  formSchema: [],
+  activeNodeId: null,
+  formdata:{},
+  setformopen:(formOpen)=> set({formOpen}),
+  setformSchema:(formSchema)=> set({formSchema}),
+  setactiveNodeId:(activeNodeId)=> set({activeNodeId}),
+  setformdata:(formdata)=> set({formdata}),
+  
+}))
