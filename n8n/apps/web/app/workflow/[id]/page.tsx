@@ -7,6 +7,7 @@ import SideBar from "../../../components/sidebar";
 
 
 export default function DashboardLayout() {
+  
 
   return (
     <div className="h-screen w-screen flex flex-row">
@@ -21,6 +22,7 @@ export default function DashboardLayout() {
         </div>
         <div className="bg-white h-[90%]">
           <Workflow /> 
+          
         </div>
       </div>
     </div>

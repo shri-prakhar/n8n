@@ -2,6 +2,7 @@ import { useRouter } from "next/navigation";
 import TitleButton from "./titleButton"
 import Workflows from "./workflows"; // NEW
 import api from "../lib/api";
+import Credentials from "./credentials";
 
 interface Personaltypes {
   clicked: string | null;
@@ -76,7 +77,7 @@ export default function Personal({ clicked, setClicked }: Personaltypes) {
 
       <div className="mx-10">
         {clicked === "Workflows" && <Workflows />}
-        {clicked === "Credentials" }
+        {clicked === "Credentials" && <Credentials /> }
         {clicked === "Execution" }
       </div>
     </div>

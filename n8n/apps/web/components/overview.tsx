@@ -4,6 +4,7 @@ import {  useRouter } from "next/navigation";
 import TitleButton from "./titleButton"
 import api from "../lib/api";
 import Workflows from "./workflows";
+import Credentials from "./credentials";
 
 interface OverViewtypes {
     clicked: string | null;
@@ -79,7 +80,7 @@ const res = await api.post("/workflow" , {
         
               <div className="mx-10">
                 {clicked === "Workflows" && <Workflows />}
-                {clicked === "Credentials" }
+                {clicked === "Credentials" && <Credentials /> }
                 {clicked === "Execution" }
               </div>
             

@@ -26,7 +26,7 @@
     ToolNode,
   } from "./nodes/customnodes";
   import RightPanel from "./triggerPanel";
-  import { useNodeformStore, useSaveButtonStore, usetoolpanelStore } from "./globalstateVaribles/Reactflow.ts/ReactflowVariables";
+  import { useCredentialsformStore, useNodeformStore, useSaveButtonStore, usetoolpanelStore } from "./globalstateVaribles/Reactflow.ts/ReactflowVariables";
   import api from "../lib/api";
   import { useParams } from "next/navigation";
   import ToolPanel from "./aiAgenttoolpanel";
@@ -34,6 +34,7 @@ import { MoveLeft, PanelBottom } from "lucide-react";
 import ExecuteWorkflowButton from "./nodes/executeButton";
 import NodeConfigForm from "./nodes/nodeformconfig";
 import { nodeSchemas } from "./globalstateVaribles/nodeformschemas";
+import Credentialform from "./nodes/credentialsform";
   <svg width="0" height="0">
   <defs>
     <marker
@@ -73,6 +74,8 @@ import { nodeSchemas } from "./globalstateVaribles/nodeformschemas";
       setToolPanelOpen,
       activeToolParentId,
       setActiveToolParentId,} = usetoolpanelStore()
+      
+      const {credentialsformOpen} = useCredentialsformStore()
 
     const params = useParams<{ id: string }>();
     const id = params?.id;
@@ -603,6 +606,7 @@ import { nodeSchemas } from "./globalstateVaribles/nodeformschemas";
                 );
               }}
           />
+          { credentialsformOpen && <Credentialform />}
           <ExecuteWorkflowButton workflowId={id}/>
 
           <RightPanel

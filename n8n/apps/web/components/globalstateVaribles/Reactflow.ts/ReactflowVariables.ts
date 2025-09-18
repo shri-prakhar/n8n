@@ -70,3 +70,32 @@ export const useNodeformStore = create<NodeformSchema>((set) => ({
   setformdata:(formdata)=> set({formdata}),
   
 }))
+
+interface CredentialsformSchema {
+  credentialsformOpen : boolean;
+  saveCredButtonEnable : boolean;
+  credentialsformSchema : FeildConfig[];
+  credentialsformdata:Record<string , any>;
+  setcredentialsformopen:(open: boolean ) => void;
+  setcredentialsformSchema:(schema : FeildConfig[] ) => void ;
+  setcredentialsformdata: (data : Record<string,any>) => void;
+  setsaveCredButtonEnable : (enable: boolean) => void;
+  credentialsOptions: string[];
+  addCredentialOption: (label: string) => void;
+}
+
+export const useCredentialsformStore = create<CredentialsformSchema>((set) => ({
+  credentialsformOpen: false,
+  saveCredButtonEnable : false,
+  credentialsformSchema: [],
+  credentialsformdata:{},
+  setcredentialsformopen:(credentialsformOpen)=> set({credentialsformOpen}),
+  setcredentialsformSchema:(credentialsformSchema)=> set({credentialsformSchema}),
+  setcredentialsformdata:(credentialsformdata)=> set({credentialsformdata}),
+  setsaveCredButtonEnable : (saveCredButtonEnable) => set({saveCredButtonEnable}),
+  credentialsOptions: [],
+  addCredentialOption: (label) =>
+    set((state) => ({
+      credentialsOptions: [...state.credentialsOptions, label],
+    })),
+}))

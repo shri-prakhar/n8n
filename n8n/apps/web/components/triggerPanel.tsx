@@ -43,7 +43,7 @@ export default function RightPanel({
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-12 right-0 h-full w-90 bg-[#1e1e1e] border-l border-[#333] shadow-lg flex flex-col z-50"
+              className="fixed top-18 right-0 h-full w-90 bg-[#1e1e1e] border-l border-[#333] shadow-lg flex flex-col z-50"
             >
               <div className="p-4 border-b border-[#333] flex justify-between items-center">
                 <h2 className="text-white font-medium ">

@@ -30,8 +30,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/v1" , authRoutes)
+app.use("/api/v1/cred" , credentialsRoutes)
 app.use("/api/v1" , workflowRoutes)
-app.use("/api/v1" , credentialsRoutes)
+
 
 
 
