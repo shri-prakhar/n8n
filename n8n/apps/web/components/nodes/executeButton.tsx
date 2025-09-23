@@ -19,13 +19,14 @@ export default function ExecuteWorkflowButton({ workflowId }: { workflowId: stri
       setLoading(true);
       setExecuted(false);
 
+
       await saveWorkflow();
       console.log("Workflow saved successfully ✅");
 
       const res = await api.post(`/execute/${workflowId}`);
       console.log("Execution started:", res.data);
 
-      setExecuted(true);
+     // setExecuted(true);
     } catch (error: any) {
       console.error("Error executing workflow:", error.response?.data || error.message);
     } finally {

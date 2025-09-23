@@ -386,7 +386,7 @@ import Credentialform from "./nodes/credentialsform";
 
     const existingToolsCount = nodes.filter(
       (n) =>
-        n.type === "Toolnode" &&
+        n.type === "ToolNode" && 
         edges.some(
           (e) =>
             e.source === activeToolParentId &&
@@ -400,14 +400,15 @@ import Credentialform from "./nodes/credentialsform";
       y: parentNode.position.y + 150 + existingToolsCount * 90,
     };
 
-
     const newNode: Node = {
       id: newId,
       type,
       position: newNodePos,
-      data: { onDelete: handleDeleteNode },
+      data: { 
+        onDelete: handleDeleteNode,
+        toolMeta: { name: `Tool ${existingToolsCount + 1}`, type }
+      },
     };
-
 
     const newEdge: Edge = {
       id: `e-${activeToolParentId}-${newId}`,
@@ -418,11 +419,32 @@ import Credentialform from "./nodes/credentialsform";
       style: { strokeDasharray: "5,4" },
     };
 
-    console.log(nodes)
     setNodes((prev) => [...prev, newNode]);
-    console.log(nodes)
     setEdges((prev) => [...prev, newEdge]);
 
+    setNodes((prevNodes) =>
+      prevNodes.map((node) => {
+        if (node.id === activeToolParentId) {
+          const existingTools = Array.isArray(node.data?.tools) ? node.data.tools : [];
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              tools: [
+                ...existingTools,
+                {
+                  id: newId,
+                  name: `Tool ${existingTools.length + 1}`,
+                  type,
+                  description: "Custom tool added to AI Agent",
+                },
+              ],
+            },
+          };
+        }
+        return node;
+      })
+    );
 
     setToolPanelOpen(false);
     setSaveButtonEnable(false);
@@ -430,6 +452,7 @@ import Credentialform from "./nodes/credentialsform";
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [activeToolParentId, nodes, edges, handleDeleteNode]
 );
+
 
 
 
@@ -595,17 +618,45 @@ import Credentialform from "./nodes/credentialsform";
               />
             )}
           </ReactFlow>
-          <NodeConfigForm 
-              onSubmit={(data) => {
-                setNodes((nds) =>
-                  nds.map((node) =>
-                    node.id === useNodeformStore.getState().activeNodeId
-                      ? { ...node, data: { ...node.data, customData: data } }
-                      : node
-                  )
-                );
-              }}
-          />
+          <NodeConfigForm
+  onSubmit={(data) => {
+    const { activeNodeId } = useNodeformStore.getState();
+
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.type === "AIAgentnode" && Array.isArray(node.data?.tools)) {
+          const hasTool = node.data.tools.some(
+            (tool: any) => tool.id === activeNodeId
+          );
+
+          if (hasTool) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                tools: node.data.tools.map((tool: any) =>
+                  tool.id === activeNodeId
+                    ? { ...tool, customData: data } 
+                    : tool
+                ),
+              },
+            };
+          }
+        }
+
+        if (node.id === activeNodeId && node.type !== "Toolnode") {
+          return {
+            ...node,
+            data: { ...node.data, customData: data },
+          };
+        }
+
+        return node;
+      })
+    );
+  }}
+/>
+
           { credentialsformOpen && <Credentialform />}
           <ExecuteWorkflowButton workflowId={id}/>
 

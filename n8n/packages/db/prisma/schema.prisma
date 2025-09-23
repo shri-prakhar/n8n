@@ -1,91 +1,91 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+  // This is your Prisma schema file,
+  // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+  // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+  // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-generator client {
-  provider = "prisma-client-js" 
-}
+  generator client {
+    provider = "prisma-client-js" 
+  }
 
-datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
-}
+  datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+  }
 
 
-model Users {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  email String  @unique
-  name String 
-  password String
-  workflows Workflows[]
-  credentials  Credentials[]
-  createdAt DateTime @default(now()) 
-  updatedAt DateTime @updatedAt    
+  model Users {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    email String  @unique
+    name String 
+    password String
+    workflows Workflows[]
+    credentials  Credentials[]
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt    
 
-}
+  }
 
-model Credentials {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  title String 
-  platform String 
-  data Json 
-  userId String @db.ObjectId
-  user Users @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now()) 
-  updatedAt DateTime @updatedAt    
+  model Credentials {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    title String 
+    platform String 
+    data Json 
+    userId String @db.ObjectId
+    user Users @relation(fields: [userId], references: [id])
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt    
 
-}
+  }
 
-model Workflows {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  title String 
-  enabled Boolean
-  nodes Json
-  connections Json 
-  viewport Json?
-  uiState Json?
-  userId String @db.ObjectId
-  user Users @relation(fields: [userId], references: [id])
-  WorkflowExecutions WorkflowExecutions[]
-  createdAt DateTime @default(now()) 
-  updatedAt DateTime @updatedAt    
-}
+  model Workflows {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    title String 
+    enabled Boolean
+    nodes Json
+    connections Json 
+    viewport Json?
+    uiState Json?
+    userId String @db.ObjectId
+    user Users @relation(fields: [userId], references: [id])
+    WorkflowExecutions WorkflowExecutions[]
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt    
+  }
 
-model Webhook {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  title String 
-  method String
-  path String 
-  header String
-  secret String 
-  createdAt DateTime @default(now()) 
-  updatedAt DateTime @updatedAt    
+  model Webhook {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    title String 
+    method String
+    path String 
+    header String
+    secret String 
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt    
 
-}
+  }
 
-model WorkflowExecutions {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  workflowId String @db.ObjectId
-  workflow Workflows @relation(fields: [workflowId] , references: [id])
-  status String 
-  logs Json?
-  results Json?
-  nodes NodeExecutions[]
-  startedAt DateTime @default(now()) 
-  finishedAt DateTime?
-}
+  model WorkflowExecutions {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    workflowId String @db.ObjectId
+    workflow Workflows @relation(fields: [workflowId] , references: [id])
+    status String 
+    logs Json?
+    results Json?
+    nodes NodeExecutions[]
+    startedAt DateTime @default(now())  
+    finishedAt DateTime?
+  }
 
-model NodeExecutions{
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  executionid String @db.ObjectId
-  exection WorkflowExecutions @relation(fields: [executionid] , references: [id])
-  nodeId String
-  type String
-  status String 
-  logs Json?
-  result Json?
-  startedAt DateTime @default(now())
-  finishedAt DateTime?
-}
+  model NodeExecutions{
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    executionid String @db.ObjectId
+    exection WorkflowExecutions @relation(fields: [executionid] , references: [id])
+    nodeId String
+    type String
+    status String 
+    logs Json?
+    result Json?
+    startedAt DateTime @default(now())
+    finishedAt DateTime?
+  }

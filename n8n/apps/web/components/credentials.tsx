@@ -33,8 +33,6 @@ export default function Credentials() {
     async function fetchCredentials() {
       try {
         const res = await api.get("/cred/allCredentials", { withCredentials: true });
-        console.log("hi")
-        console.log(res)
         setCredentials(res.data.creds);
       } catch (err: any) {
         console.error("Error fetching credentials:", err.response?.data?.message || err.message);
@@ -47,7 +45,8 @@ export default function Credentials() {
     
   }, []);
 
-  const handleClick = (id: string) => {
+  const handleClick = () => {
+    console.log("hi")
     setcredentialsformopen(true)
   };
 
@@ -61,7 +60,7 @@ export default function Credentials() {
         credentials.map((credentials) => (
         <div
           key={credentials.id}
-          onClick={() => handleClick(credentials.id)}
+          onClick={() => handleClick}
           className="
             cursor-pointer mt-6 w-full rounded-md border border-gray-600
             bg-[#414244] p-3 

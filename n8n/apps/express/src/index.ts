@@ -2,11 +2,30 @@ import express, { Request ,Response } from "express";
 import authRoutes from "./authRoutes.js";
 import cookieParser from "cookie-parser";
 import credentialsRoutes from "./credentialRoutes.js"
+ import workflowexecRoutes from "./workflowexecRoute.js"
 
 import workflowRoutes from "./workRoutes.js"
 import cors from "cors"
+import { startWebsocketserver } from "./workflowexec/wsServer.js";
+
+import {Redis} from "ioredis";
+import { Queue  } from "bullmq";
+import dotenv from "dotenv"
+
 
 const app = express()
+startWebsocketserver()
+dotenv.config()
+
+
+
+ 
+
+
+
+// export async function EnqueQueueJob( Payload:any = {}) {
+//     return queue.add("workflow-jobs"  , Payload , {attempts:3, backoff:{type:"exponential",delay:1000} ,removeOnComplete :true , removeOnFail:false} );
+// }
 
 const allowedOrigins = [
   "http://localhost:3000",
@@ -32,6 +51,7 @@ app.use(cookieParser());
 app.use("/api/v1" , authRoutes)
 app.use("/api/v1/cred" , credentialsRoutes)
 app.use("/api/v1" , workflowRoutes)
+ app.use("/api/v1" , workflowexecRoutes)
 
 
 

@@ -137,7 +137,7 @@ function withHoverActions(NodeBody: any) {
           e.stopPropagation();
           e.preventDefault();
           setformopen(true);
-          setactiveNodeId(shortId); 
+          setactiveNodeId(id); 
           
           const schema = nodeSchemas[shortId] || [
             { name: "title", label: "Title", type: "text" },
@@ -210,10 +210,12 @@ function TelegramBody({ id, data }: any) {
 }
 export const TelegramNode = withHoverActions(TelegramBody);
 function AIAgentBody({ id, data }: any) {
+  const tools = data?.tools || [];
   return (
     <div >
+
       <Bot className="w-6 h-6 text-white mb-2" />
-      <span className="text-sm">AI Agent</span>
+      <span className="text-sm">AI Agent </span>
 
 
       <Handle type="target" position={Position.Left} className="w-3 h-3 bg-white"         
@@ -272,8 +274,7 @@ function AIAgentBody({ id, data }: any) {
   </svg>
 </Handle>
 
-
-
+    
 
     </div>
   );

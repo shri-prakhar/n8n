@@ -6,7 +6,7 @@ import { useCredentialsformStore, useNodeformStore } from "../globalstateVarible
 
 export default function SaveCredButton() {
     const {activeNodeId} = useNodeformStore()
-    const {credentialsformdata , saveCredButtonEnable , setcredentialsformopen ,addCredentialOption} = useCredentialsformStore()
+    const {credentialsformdata , saveCredButtonEnable , setcredentialsformopen ,addCredentialOption , setcredentialsformdata} = useCredentialsformStore()
   const [loading, setLoading] = useState(false);
 
   async function handleClickSaveButton() {
@@ -14,9 +14,9 @@ export default function SaveCredButton() {
       try {
         setLoading(true);
         const creds = await api.get("/cred/allCredentials")
-        creds.data.creds.forEach((cred: any) => {
-            addCredentialOption(cred.title);
-        });
+        // creds.data.creds.forEach((cred: any) => {
+        //     addCredentialOption(cred.title);
+        // });
 
         const new_creds =await api.post("/cred/credentials",{
             title:  `${activeNodeId?.toString().split("node")[0]}-${creds.data.creds.length + 1}`,
@@ -27,6 +27,7 @@ export default function SaveCredButton() {
         console.log("succesfully saved the credentials");
         addCredentialOption(new_creds.data.creds.title)
         setcredentialsformopen(false)
+        setcredentialsformdata({});
         
       } catch (error) {
         console.error("Error saving credentials", error);

@@ -39,16 +39,18 @@ export default function NavBar() {
             <UserCircle />
           </div>
           <div>
-            {id && workflowTitle ? ( <div className="flex items-center ">
-              Personal / {workflowTitle} 
-              <div className="positon fixed">
+            {id && workflowTitle ? ( <div className="flex justify-between items-center">
+              <div>
+                Personal / {workflowTitle} 
               </div>
+              <div className="position absolute right-12 top-5">
+                <SaveButton />
+              </div>
+              
               </div>): "Personal"}
           </div>
         </div>
-        <div>
-          <SaveButton />
-        </div>
+        
       </div>
     </div>
   );

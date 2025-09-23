@@ -11,18 +11,34 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@langchain/community": "^0.3.56",
+    "@langchain/core": "^0.3.77",
+    "@langchain/google-genai": "^0.2.18",
+    "@langchain/langgraph": "^0.3.12",
+    "@langchain/ollama": "^0.2.4",
+    "@langchain/openai": "^0.6.13",
     "@repo/db": "workspace:*",
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/ws": "^8.18.1",
+    "axios": "^1.11.0",
     "bcryptjs": "^3.0.2",
+    "bullmq": "^5.58.6",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "ioredis": "^5.7.0",
     "jsonwebtoken": "^9.0.2",
+    "langchain": "^0.3.34",
+    "nodemailer": "^7.0.6",
     "typescript": "^5.9.2",
+    "ws": "^8.18.3",
     "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^7.0.1"
   }
 }

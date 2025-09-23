@@ -2,13 +2,26 @@
 "use client";
 import { Bot, Code2, Mail, WebhookIcon } from "lucide-react";
 import { credSchemas } from "../globalstateVaribles/credformschema";
-import { useCredentialsformStore, useNodeformStore } from "../globalstateVaribles/Reactflow.ts/ReactflowVariables";
+import { useCredentialsformStore, useNodeformStore, useSaveButtonStore } from "../globalstateVaribles/Reactflow.ts/ReactflowVariables";
 import { FaTelegramPlane } from "react-icons/fa";
+import api from "../../lib/api";
+import { useEffect } from "react";
 
 
 export default function NodeConfigForm({ onSubmit }: { onSubmit: (data: any) => void }) {
   const { formOpen, setformopen, formSchema, formdata, setformdata ,activeNodeId } = useNodeformStore();
-  const {setcredentialsformopen, setcredentialsformSchema,credentialsOptions }=useCredentialsformStore()
+  const {setcredentialsformopen, setcredentialsformSchema,credentialsOptions,addCredentialOption }=useCredentialsformStore()
+  
+  const {saveButtonEnable , setSaveButtonEnable}=useSaveButtonStore()
+  useEffect(() => {
+     async function creds(){ 
+       const cred =  await api.get("/cred/allCredentials")
+        cred.data.creds.forEach((cred: any) => {
+            addCredentialOption(cred.title);
+        });
+    }
+    creds()
+  },[])
 
   if (!formOpen) return null;
   const renderIcon = () => {
@@ -42,6 +55,9 @@ export default function NodeConfigForm({ onSubmit }: { onSubmit: (data: any) => 
   const handleSubmit = () => {
     onSubmit(formdata);
     setformopen(false);
+    if(saveButtonEnable){
+        setSaveButtonEnable(false)
+    }
   };
 
   return (
