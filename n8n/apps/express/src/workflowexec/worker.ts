@@ -58,7 +58,7 @@ import AI_AGENT from "./AIagentexec.js";
             data: { status: "FAILED", logs: { error: err.message } },
         });
 
-        broadcastMessage({ executiionId, nodeId: node.id, status: "FAILED", error: err.message });
+        broadcastMessage({ executiionId, nodeId: node.id, status: "FAILED", result: err.message });
         }
         else{
         console.log("something went wrong")

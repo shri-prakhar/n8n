@@ -1,4 +1,4 @@
-import { ChatOllama } from "@langchain/ollama";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { DynamicStructuredTool, Tool } from "langchain/tools";
 import { StateGraph, MessagesAnnotation } from "@langchain/langgraph";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
@@ -6,6 +6,7 @@ import { prisma } from "@repo/db";
 
 
 async function buildTools(nodedata: any): Promise<Tool[]> {
+  if (nodedata.data.tools){
   return nodedata.data.tools.map((t: any) =>
     new DynamicStructuredTool({
       name: t.customData.name,
@@ -27,6 +28,9 @@ async function buildTools(nodedata: any): Promise<Tool[]> {
       },
     })
   );
+}else{
+  return []
+}
 }
 
 
@@ -34,10 +38,14 @@ export default async function AI_AGENT(nodedata: any, userId: string) {
   const credential = await prisma.credentials.findFirst({ 
     where: { title: nodedata.data.customData.credentials, userId } 
   });
-
-  const model = new ChatOllama({
-    baseUrl: "http://localhost:11434",
-    model: "llama2:7b",
+  
+  const credentialData = credential?.data as {
+    apikey:string
+  }
+  const model = new ChatGoogleGenerativeAI({
+    apiKey : credentialData.apikey,
+    model: "gemini-1.5-flash",
+    temperature: nodedata.data.customData.temperature
   });
 
   const tools = await buildTools(nodedata);
@@ -83,6 +91,6 @@ export default async function AI_AGENT(nodedata: any, userId: string) {
   const finalState = await app.invoke({
     messages: [new HumanMessage(nodedata.data.customData.prompt)],
   });
-  console.log(finalState.messages[finalState.messages.length - 1]?.content;)
+  console.log(finalState.messages[finalState.messages.length - 1]?.content)
   return finalState.messages[finalState.messages.length - 1]?.content;
 }

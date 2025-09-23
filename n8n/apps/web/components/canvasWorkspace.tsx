@@ -26,15 +26,16 @@
     ToolNode,
   } from "./nodes/customnodes";
   import RightPanel from "./triggerPanel";
-  import { useCredentialsformStore, useNodeformStore, useSaveButtonStore, usetoolpanelStore } from "./globalstateVaribles/Reactflow.ts/ReactflowVariables";
+  import { useCredentialsformStore, useNodeformStore, useNodeOutputstore, useSaveButtonStore, usetoolpanelStore } from "./globalstateVaribles/Reactflow.ts/ReactflowVariables";
   import api from "../lib/api";
   import { useParams } from "next/navigation";
   import ToolPanel from "./aiAgenttoolpanel";
-import { MoveLeft, PanelBottom } from "lucide-react";
 import ExecuteWorkflowButton from "./nodes/executeButton";
 import NodeConfigForm from "./nodes/nodeformconfig";
 import { nodeSchemas } from "./globalstateVaribles/nodeformschemas";
 import Credentialform from "./nodes/credentialsform";
+import useWebsocket from "../lib/useWebsocket";
+import CanvasNotification from "./nodes/notification";
   <svg width="0" height="0">
   <defs>
     <marker
@@ -68,7 +69,8 @@ import Credentialform from "./nodes/credentialsform";
       setSaveButtonEnable,
       setSaveWorkflow,
     } = useSaveButtonStore();
-
+   const { setnodeOutputs } = useNodeOutputstore()
+   const [toastMsg, setToastMsg] = useState<string | null>(null);
    const {
       toolPanelOpen,
       setToolPanelOpen,
@@ -526,6 +528,16 @@ import Credentialform from "./nodes/credentialsform";
       style: { strokeWidth: 2, stroke: "white" }, 
     };
 
+    useWebsocket(id , (msg) => {
+      if (msg.nodeId){
+        setnodeOutputs(msg.nodeId , {
+            status: msg.status,
+            result: msg.result,
+        });
+        setToastMsg(`${msg.nodeId} → ${msg.status}`)
+      }
+    }); 
+
     return (
       <div className="h-full w-full">
         <div className="h-full w-full">
@@ -656,6 +668,11 @@ import Credentialform from "./nodes/credentialsform";
     );
   }}
 />
+          <CanvasNotification 
+              message={toastMsg} 
+              onClose={() => setToastMsg(null)} 
+            />
+
 
           { credentialsformOpen && <Credentialform />}
           <ExecuteWorkflowButton workflowId={id}/>

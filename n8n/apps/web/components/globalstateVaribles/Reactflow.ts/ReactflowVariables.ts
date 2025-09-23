@@ -99,3 +99,19 @@ export const useCredentialsformStore = create<CredentialsformSchema>((set) => ({
       credentialsOptions: [...state.credentialsOptions, label],
     })),
 }))
+
+
+interface Nodeform{
+  nodeOutputs : Record <string , any>;
+  setnodeOutputs : (nodeId :string  , output: any) => void;
+
+}
+
+
+export const useNodeOutputstore = create<Nodeform>((set) => ({
+  nodeOutputs : {},
+  setnodeOutputs : (nodeId , output) => 
+    set((state) => ({
+      nodeOutputs: {  ...state.nodeOutputs , [nodeId]:  output}
+    }))
+}))

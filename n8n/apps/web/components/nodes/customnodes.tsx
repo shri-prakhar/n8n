@@ -8,13 +8,13 @@ import {
   Trash2Icon,
   PlayIcon,
   CircleStopIcon,
-  Hammer,
   Code2,
 } from "lucide-react";
 import { FaTelegramPlane } from "react-icons/fa";
 import { useState } from "react";
 import { useNodeformStore } from "../globalstateVaribles/Reactflow.ts/ReactflowVariables";
 import { nodeSchemas } from "../globalstateVaribles/nodeformschemas";
+import { useNodeOutputstore } from "../globalstateVaribles/Reactflow.ts/ReactflowVariables";
 
 const baseNode =
   "relative border-2 rounded-lg shadow-md text-white font-medium p-4 bg-[#414244] flex flex-col items-center justify-center min-w-[120px] min-h-[80px] ";
@@ -25,6 +25,8 @@ function NodeActions({ onDelete }: { onDelete?: () => void }) {
     action?.();
   };
   
+
+
 
   return (
     <div className="absolute top-1 right-1 flex ">
@@ -116,7 +118,9 @@ function PlusHandle({
 
 
 function withHoverActions(NodeBody: any) {
+  
   return function WrappedNode({ id, data }: any) {
+    const borderColor = useNodeBorderColor(id);
     const [hover, setHover] = useState(false);
     const {
       setformopen,
@@ -130,7 +134,7 @@ function withHoverActions(NodeBody: any) {
 
     return (
       <div
-        className={`${baseNode} cursor-pointer`}
+        className={`${baseNode} cursor-pointer ${borderColor}`}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         onDoubleClick={(e) => {
@@ -156,64 +160,75 @@ function withHoverActions(NodeBody: any) {
   };
 }
 
+function useNodeBorderColor(id: string) {
+  const { nodeOutputs } = useNodeOutputstore();
+  const nodeOutput = nodeOutputs[id] || {};
+
+  if (!nodeOutput.status || nodeOutput.status === "SUCCESS") return "border-red-500"; 
+  if (nodeOutput.status === "SUCCESS") return "border-green-500";
+  return "border-red-500"; 
+}
 
 function WebhookBody({ id, data }: any) {
+
   return (
-    <>
+    <div >
       <Webhook className="w-6 h-6 text-white mb-2" />
       <span className="text-sm">Webhook</span>
-      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-white"        
-      style={{
-          width: '6px',
-          height: '16px',
-          borderRadius: '0',
-        }} />
+
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="w-3 h-3 bg-white"
+        style={{ width: "6px", height: "16px", borderRadius: "0" }}
+      />
       <PlusHandle id={id} onAdd={data.onAdd} hidden={data.hasOutgoing} />
-    </>
+    </div>
   );
 }
 export const WebhookNode = withHoverActions(WebhookBody);
 
 function EmailBody({ id, data }: any) {
+
   return (
-    <>
+    <div >
       <Mail className="w-6 h-6 text-green-400 mb-2" />
       <span className="text-sm">Send Email</span>
-      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-white-100"         
-      style={{
-          width: '6px',
-          height: '16px',
-          borderRadius: '0',
-          backgroundColor:'white'
-        }}/>
+
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{ width: "6px", height: "16px", borderRadius: "0", backgroundColor: "white" }}
+      />
       <PlusHandle id={id} onAdd={data.onAdd} hidden={data.hasOutgoing} />
-    </>
+    </div>
   );
 }
 export const EmailNode = withHoverActions(EmailBody);
 
 function TelegramBody({ id, data }: any) {
+  const borderColor = useNodeBorderColor(id);
+
   return (
-    <>
+    <div className={`${borderColor}`}>
       <FaTelegramPlane className="w-6 h-6 text-blue-400 mb-2" />
       <span className="text-sm">Get a Chat</span>
-      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-white"         
-      style={{
-          width: '6px',
-          height: '16px',
-          borderRadius: '0',
-          backgroundColor:'white'
-        }}/>
+
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{ width: "6px", height: "16px", borderRadius: "0", backgroundColor: "white" }}
+      />
       <PlusHandle id={id} onAdd={data.onAdd} hidden={data.hasOutgoing} />
-    </>
+    </div>
   );
 }
 export const TelegramNode = withHoverActions(TelegramBody);
 function AIAgentBody({ id, data }: any) {
   const tools = data?.tools || [];
+  
   return (
     <div >
-
       <Bot className="w-6 h-6 text-white mb-2" />
       <span className="text-sm">AI Agent </span>
 
@@ -283,29 +298,32 @@ export const AIAgentNode = withHoverActions(AIAgentBody);
 
 
 function ManualTriggerBody({ id, data }: any) {
+
   return (
-    <>
+    <div >
       <MousePointerClick className="w-6 h-6 mb-2" />
       <span className="text-sm">Manual Trigger</span>
       <PlusHandle id={id} onAdd={data.onAdd} hidden={data.hasOutgoing} />
-    </>
+    </div>
   );
 }
-export const ManualTriggerNode = withHoverActions(ManualTriggerBody);
 
+export const ManualTriggerNode = withHoverActions(ManualTriggerBody);
 function ToolBody({ id, data }: any) {
+  
+
   return (
-    <>
+    <div >
       <Code2 className="w-5 h-5 text-purple-400" />
       <span className="ml-1">Tool</span>
-      <Handle type="target" id="tool-target" position={Position.Top} className="w-3 h-3 bg-white"         
-      style={{
-          width: '6px',
-          height: '16px',
-          borderRadius: '0',
-          backgroundColor:'white'
-        }} />
-    </>
+      <Handle
+        type="target"
+        id="tool-target"
+        position={Position.Top}
+        style={{ width: "6px", height: "16px", borderRadius: "0", backgroundColor: "white" }}
+      />
+    </div>
   );
 }
+
 export const ToolNode = withHoverActions(ToolBody);
