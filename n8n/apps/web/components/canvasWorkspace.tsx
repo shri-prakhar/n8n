@@ -77,7 +77,7 @@ import CanvasNotification from "./nodes/notification";
       activeToolParentId,
       setActiveToolParentId,} = usetoolpanelStore()
       
-      const {credentialsformOpen} = useCredentialsformStore()
+      const {credentialsformOpen , addCredentialOption ,resetCredentialOption} = useCredentialsformStore()
 
     const params = useParams<{ id: string }>();
     const id = params?.id;
@@ -455,6 +455,20 @@ import CanvasNotification from "./nodes/notification";
   [activeToolParentId, nodes, edges, handleDeleteNode]
 );
 
+    useEffect(() => {
+        console.log("cred was called")
+        async function creds(){ 
+          const cred =  await api.get("/cred/allCredentials")
+            cred.data.creds.forEach((cred: any) => {
+                addCredentialOption(cred.title);
+            });
+        }
+        creds()
+        return () => {
+        console.log("Form unmounted → resetting credentials");
+        resetCredentialOption()
+      };
+      },[resetCredentialOption ,addCredentialOption])
 
 
 
@@ -466,6 +480,7 @@ import CanvasNotification from "./nodes/notification";
               // alert("empty workflows")
               return;
             }
+            
 
             if (!saveButtonEnable) {
               const workflowId = id;
@@ -667,6 +682,7 @@ import CanvasNotification from "./nodes/notification";
       })
     );
   }}
+  id ={id}
 />
           <CanvasNotification 
               message={toastMsg} 

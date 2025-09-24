@@ -82,6 +82,7 @@ interface CredentialsformSchema {
   setsaveCredButtonEnable : (enable: boolean) => void;
   credentialsOptions: string[];
   addCredentialOption: (label: string) => void;
+  resetCredentialOption : () => void;
 }
 
 export const useCredentialsformStore = create<CredentialsformSchema>((set) => ({
@@ -98,8 +99,9 @@ export const useCredentialsformStore = create<CredentialsformSchema>((set) => ({
     set((state) => ({
       credentialsOptions: [...state.credentialsOptions, label],
     })),
-}))
-
+    
+    resetCredentialOption : () => set({credentialsOptions : []}),
+  }))
 
 interface Nodeform{
   nodeOutputs : Record <string , any>;

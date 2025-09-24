@@ -8,26 +8,15 @@ import api from "../../lib/api";
 import { useEffect } from "react";
 
 
-export default function NodeConfigForm({ onSubmit }: { onSubmit: (data: any) => void }) {
+export default function NodeConfigForm({ onSubmit , id}: { onSubmit: (data: any) => void ; id:string }) {
   const { formOpen, setformopen, formSchema, formdata, setformdata ,activeNodeId } = useNodeformStore();
-  const {setcredentialsformopen, setcredentialsformSchema,credentialsOptions,addCredentialOption }=useCredentialsformStore()
+  const {setcredentialsformopen, setcredentialsformSchema,credentialsOptions,addCredentialOption , resetCredentialOption }=useCredentialsformStore()
   const { nodeOutputs } = useNodeOutputstore();
     const nodeOutput = nodeOutputs[activeNodeId || ""] || {};
     console.log(nodeOutputs)
   
   const {saveButtonEnable , setSaveButtonEnable}=useSaveButtonStore()
-  useEffect(() => {
-    console.log("cred was called")
-     async function creds(){ 
-       const cred =  await api.get("/cred/allCredentials")
-        cred.data.creds.forEach((cred: any) => {
-            addCredentialOption(cred.title);
-        });
-    }
-    creds()
-
-  },[])
-
+  
   if (!formOpen) return null;
   const renderIcon = () => {
   const type = activeNodeId?.toString().split("node")[0];
@@ -120,11 +109,21 @@ export default function NodeConfigForm({ onSubmit }: { onSubmit: (data: any) => 
                                     </option>
 
                                     {field.name === "credentials" &&
-                                    credentialsOptions.map((opt, i) => (
-                                        <option key={i} value={opt}>
-                                        {opt}
-                                        </option>
-                                    ))}
+                                        credentialsOptions
+                                            .filter((opt) => {
+                                            const type = activeNodeId?.toLowerCase() || "";
+                                            if (type.includes("telegram")) return opt.toLowerCase().includes("telegram");
+                                            if (type.includes("email")) return opt.toLowerCase().includes("email");
+                                            if (type.includes("webhook")) return opt.toLowerCase().includes("webhook");
+                                            if (type.includes("aiagent")) return opt.toLowerCase().includes("aiagent");
+                                            return true;
+                                            })
+                                            .filter((opt, i, arr) => arr.indexOf(opt) === i) // ensure unique
+                                            .map((opt, i) => (
+                                            <option key={i} value={opt}>
+                                                {opt}
+                                            </option>
+                                            ))}
 
                                     {field.name === "credentials" && (
                                     <option value="Create new credentials">Create new credentials</option>
