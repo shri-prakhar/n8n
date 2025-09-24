@@ -15,6 +15,7 @@ import { useState } from "react";
 import { useNodeformStore } from "../globalstateVaribles/Reactflow.ts/ReactflowVariables";
 import { nodeSchemas } from "../globalstateVaribles/nodeformschemas";
 import { useNodeOutputstore } from "../globalstateVaribles/Reactflow.ts/ReactflowVariables";
+import SpinnerOverlay from "./spinOverlay";
 
 const baseNode =
   "relative border-2 rounded-lg shadow-md text-white font-medium p-4 bg-[#414244] flex flex-col items-center justify-center min-w-[120px] min-h-[80px] ";
@@ -121,6 +122,9 @@ function withHoverActions(NodeBody: any) {
   
   return function WrappedNode({ id, data }: any) {
     const borderColor = useNodeBorderColor(id);
+    
+  const { nodeOutputs } = useNodeOutputstore();
+  const nodeOutput = nodeOutputs[id] || {};
     const [hover, setHover] = useState(false);
     const {
       setformopen,
@@ -153,7 +157,7 @@ function withHoverActions(NodeBody: any) {
         }}
       >
         {hover && <NodeActions onDelete={() => data?.onDelete?.(id)} />}
-
+        { nodeOutput.status === "RUNNING" && <SpinnerOverlay />}
         <NodeBody id={id} data={data} />
       </div>
     );
@@ -164,7 +168,7 @@ function useNodeBorderColor(id: string) {
   const { nodeOutputs } = useNodeOutputstore();
   const nodeOutput = nodeOutputs[id] || {};
 
-  if (!nodeOutput.status || nodeOutput.status === "SUCCESS") return "border-red-500"; 
+  if (!nodeOutput.status || nodeOutput.status === "FAILED") return "border-red-500"; 
   if (nodeOutput.status === "SUCCESS") return "border-green-500";
   return "border-red-500"; 
 }
