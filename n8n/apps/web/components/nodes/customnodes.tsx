@@ -168,7 +168,7 @@ function useNodeBorderColor(id: string) {
   const { nodeOutputs } = useNodeOutputstore();
   const nodeOutput = nodeOutputs[id] || {};
 
-  if (!nodeOutput.status || nodeOutput.status === "FAILED") return "border-red-500"; 
+  if (!nodeOutput.status ) return "border-red-500"; 
   if (nodeOutput.status === "SUCCESS") return "border-green-500";
   return "border-red-500"; 
 }

@@ -473,7 +473,7 @@ import CanvasNotification from "./nodes/notification";
 
 
 
-      useEffect(() => {
+      useEffect(() => { 
         const saveWorkflowFn = async () => {
           try {
             if (nodes.length === 0 || !id) {
